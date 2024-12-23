@@ -54,22 +54,6 @@ const App = () => {
     // console.log("products...",products);
   }, []);
 
-  // useEffect(() => {
-
-  //   // Redirect to home page on reload
-  //   if (location.pathname === '/') {
-  //     if (isAuthenticated) {
-  //       navigate('/add-product');
-  //     } else if (isRegistered) {
-  //       navigate('/');
-  //     } else {
-  //       navigate('/register');
-  //     }
-  //   }
-  // },[isAuthenticated, isRegistered, navigate, location.pathname]);
-
-  // Fetch bill data when the user navigates to "/show-bill"
-
   // Fetch bill data when the user navigates to "/show-bill"
   useEffect(() => {
     const fetchBill = async () => {
@@ -98,6 +82,17 @@ const App = () => {
     console.log("Products updated:", products);
   }, [products]);
 
+  useEffect(() => {
+    // Parse query parameters
+    const params = new URLSearchParams(location.search);
+    const authStatus = params.get('isAuthenticated');
+
+    // Update state based on query parameter
+    if (authStatus) {
+      setIsAuthenticated(authStatus === 'true');
+    }
+  }, [location]);
+  
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsAuthenticated(false);

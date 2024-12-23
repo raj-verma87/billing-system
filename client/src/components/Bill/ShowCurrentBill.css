@@ -78,6 +78,10 @@
     cursor: pointer;
   }
   
+  .no-print {
+    display: block;
+  }
+
   @media print {
     .no-print {
       display: none;
@@ -90,6 +94,24 @@
       padding: 0;
     }
   
+    .button-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+    
+    .button-row button {
+      margin: 0 5px;
+      padding: 5px 10px; /* Adjust the padding to decrease button size */
+      font-size: 14px; /* Adjust the font size to decrease button size */
+    }
+    
+    .bill-footer {
+      padding: 10px;
+      border-top: 1px solid #ccc;
+      margin-top: 20px;
+    }
     .bill-header, .bill-section, .bill-footer {
       page-break-inside: avoid;
     }

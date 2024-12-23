@@ -2,8 +2,11 @@ import React from 'react';
 import phonepeQRCode from './qrcode.jpeg'; // Adjust the path to your QR code image
 import companyLogo from './company-logo.png'; // Adjust the path to your company logo image
 import './ShowCurrentBill.css'; // Import the CSS file
+import { useNavigate } from 'react-router-dom';
 
 const ShowCurrentBill = ({ bill }) => {
+  const navigate = useNavigate();
+
   if (!bill) {
     return <div style={{ margin: '20px' }}>No bills found</div>; // Show a loading message if the bill is undefined
   }
@@ -111,7 +114,10 @@ const ShowCurrentBill = ({ bill }) => {
       <footer className="bill-footer">
         <p>Thank you for shopping with us!</p>
         <p>Signature: ___________________</p>
-        <button className="no-print" onClick={handlePrint}>Print</button>
+        <div className="button-row">
+          <button className="no-print" onClick={handlePrint}>Print</button>
+          <button className="no-print" onClick={() => navigate('/')}>Home</button>
+        </div>
       </footer>
     </div>
   );

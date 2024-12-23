@@ -13,7 +13,7 @@ router.get('/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/' }),
   (req, res) => {
     // Successful authentication
-    res.redirect(`${port_frontend}`);
+    res.redirect('http://localhost:4000?isAuthenticated=true'); 
   }
 );
 
@@ -24,7 +24,7 @@ router.get(
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
     // Successful authentication
-    res.redirect('http://localhost:4000/'); 
+    res.redirect('http://localhost:4000?isAuthenticated=true'); 
   }
 );
 
@@ -34,7 +34,7 @@ router.get(
   '/github/callback',
   passport.authenticate('github', { failureRedirect: '/' }),
   (req, res) => {
-    res.redirect(`${port_frontend}`);
+    res.redirect('http://localhost:4000?isAuthenticated=true'); 
   }
 );
 
