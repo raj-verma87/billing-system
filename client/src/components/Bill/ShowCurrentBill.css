@@ -1,0 +1,96 @@
+.bill-container {
+    padding: 10px;
+    border: 1px solid black;
+    width: 60%;
+    margin: 0 auto; /* Remove top margin */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .bill-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .header-left {
+    flex: 1;
+  }
+  
+  .header-center {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .header-right {
+    flex: 1;
+    text-align: right;
+  }
+  
+  .company-logo {
+    width: 100px;
+    height: auto;
+  }
+  
+  .bill-section {
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  
+  .bill-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .bill-table th, .bill-table td {
+    border: 1px solid black;
+    padding: 5px;
+    text-align: center;
+  }
+  
+  .total-row {
+    font-weight: bold;
+  }
+  
+  .qr-code-section {
+    text-align: left;
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .qr-code {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .bill-footer {
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  @media print {
+    .no-print {
+      display: none;
+    }
+  
+    .bill-container {
+      width: 100%;
+      border: none;
+      margin: 0;
+      padding: 0;
+    }
+  
+    .bill-header, .bill-section, .bill-footer {
+      page-break-inside: avoid;
+    }
+  }
