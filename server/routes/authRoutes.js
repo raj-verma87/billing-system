@@ -1,10 +1,11 @@
 const express = require('express');
 const passport = require('passport');
-require('dotenv').config();
+const config = require('../config/config');
+
+const env = process.env.NODE_ENV || 'development';
+const envConfig = config[env];
 
 const router = express.Router();
-
-const port_frontend = process.env.PORT_FRONTEND ? `http://localhost:${process.env.PORT_FRONTEND}` : 'http://localhost:4000';
 
 // Facebook OAuth
 router.get('/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }));
@@ -13,7 +14,7 @@ router.get('/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/' }),
   (req, res) => {
     // Successful authentication
-    res.redirect('http://localhost:4000?isAuthenticated=true'); 
+    res.redirect(`${envConfig.callback_facebook_url}?isAuthenticated=true`); 
   }
 );
 
@@ -24,7 +25,7 @@ router.get(
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
     // Successful authentication
-    res.redirect('http://localhost:4000?isAuthenticated=true'); 
+    res.redirect(`${envConfig.callback_url}?isAuthenticated=true`);  
   }
 );
 
@@ -34,7 +35,7 @@ router.get(
   '/github/callback',
   passport.authenticate('github', { failureRedirect: '/' }),
   (req, res) => {
-    res.redirect('http://localhost:4000?isAuthenticated=true'); 
+    res.redirect(`${envConfig.callback_github_url}?isAuthenticated=true`); 
   }
 );
 

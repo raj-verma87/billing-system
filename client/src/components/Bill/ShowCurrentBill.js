@@ -103,7 +103,12 @@ const ShowCurrentBill = ({ bill }) => {
       <section className="bill-section">
         <h3>Payment Mode: {paymentMode}</h3>
       </section>
-
+      {/* Payment Buttons */}
+      <section className="bill-section">
+        <h3>Payment Options To Pay Online</h3>
+        <button className="payment-button" style={{ marginRight: '10px' }}>Pay with PayPal</button>
+        <button className="payment-button">Pay with Razorpay</button>
+      </section>
       {/* QR Code */}
       <section className="qr-code-section">
         <h3>Scan to Pay</h3>
@@ -112,12 +117,14 @@ const ShowCurrentBill = ({ bill }) => {
 
       {/* Footer Section */}
       <footer className="bill-footer">
-        <p>Thank you for shopping with us!</p>
-        <p>Signature: ___________________</p>
-        <div className="button-row">
-          <button className="no-print" onClick={handlePrint}>Print</button>
-          <button className="no-print" onClick={() => navigate('/')}>Home</button>
-        </div>
+      <button className="no-print" onClick={handlePrint} style={{ marginRight: '10px' }}>Print</button>
+      <button className="no-print" onClick={() => navigate('/')}>Home</button>
+
+      <p>Thank you for shopping with us!</p>
+      <p>Signature: ___________________</p>
+       
+          
+       
       </footer>
     </div>
   );

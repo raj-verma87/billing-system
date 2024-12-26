@@ -1,11 +1,10 @@
 import axios from 'axios';
-// require('dotenv').config();
 
-const port = process.env.PORT || 3000;
+const apiUrl = process.env.REACT_APP_API_URL;
 
 // Set the base URL for the backend API
 const API = axios.create({
-  baseURL: `http://localhost:${port}/api`, // Update the port if necessary
+  baseURL: `${apiUrl}/api`, // Update the port if necessary
 });
 
 // Fetch products
@@ -30,15 +29,15 @@ export const fetchLogin = (loginData) => API.post('/users/login', loginData);
 export const fetchRegister = (registerData) => API.post('/users/register', registerData);
 
 export const fetchFacebookAuth = () => {
-  window.location.href = `http://localhost:${port}/auth/facebook`;
+  window.location.href = `${apiUrl}/auth/facebook`;
 };
 
 export const fetchGoogleAuth = () => {
-  window.location.href = `http://localhost:${port}/auth/google`;
+  window.location.href = `${apiUrl}/auth/google`;
 };
 
 export const fetchGithubAuth = () => {
-  window.location.href = `http://localhost:${port}/auth/github`;
+  window.location.href = `${apiUrl}/auth/github`;
 };
 
 export default API;

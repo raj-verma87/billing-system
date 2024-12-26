@@ -58,7 +58,8 @@
   .qr-code-section {
     text-align: left;
     width: 100%;
-    margin-top: 20px;
+    margin-top: 10px;
+    margin-left: 50px;
   }
   
   .qr-code {
@@ -73,21 +74,21 @@
     cursor: pointer;
   }
   
-  .no-print {
+  /* .no-print {
     display: block;
-  }
+  } */
 
   @media print {
     .no-print {
       display: none;
     }
   
-    .bill-container {
+    /* .bill-container {
       width: 100%;
       border: none;
       margin: 0;
       padding: 0;
-    }
+    } */
   
     .button-row {
       display: flex;
@@ -107,7 +108,13 @@
       border-top: 1px solid #ccc;
       margin-top: 20px;
     }
+
+    .button-gap {
+      margin-right: 10px;
+    }
+    
     .bill-header, .bill-section, .bill-footer {
       page-break-inside: avoid;
     }
+  
   }

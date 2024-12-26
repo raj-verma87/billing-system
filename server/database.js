@@ -1,19 +1,17 @@
 // database.js
 const { Sequelize } = require('sequelize');
-const config = require('./config/config').development;
+const config = require('./config/config');
+
+const env = process.env.NODE_ENV || 'development';
+const envConfig = config[env];
 
 // Create Sequelize instance
-const sequelize = new Sequelize(config.database, config.username, config.password, {
-  host: config.host,
-  port: config.port,
-  dialect: config.dialect,
+const sequelize = new Sequelize(envConfig.database, envConfig.username, envConfig.password, {
+  host: envConfig.host,
+  port: envConfig.port,
+  dialect: envConfig.dialect,
   logging: false, // Disable logging
 });
-
-// const sequelize = new Sequelize('mysql://user:password@localhost:3306/mydatabase', {
-//   logging: false, // Disable logging
-// });
-
 
 // Test connection
 sequelize.authenticate()
