@@ -10,6 +10,7 @@ const router = express.Router();
 
 const url = `${process.env.FRONTEND_URL}?isAuthenticated=true`;
 console.log('Redirecting to:', url);
+console.log('Google Callback URL:', process.env.CALLBACK_URL);
 
 // Facebook OAuth
 router.get('/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }));
