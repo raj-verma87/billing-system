@@ -17,6 +17,9 @@ import ShowCurrentBill from "./components/Bill/ShowCurrentBill";
 import LoginPage from "./components/Auth/LoginPage";
 import RegisterPage from "./components/Auth/RegisterPage";
 import "./App.css";
+import Return from './components/Payment/Return';
+import Cancel from './components/Payment/Cancel';
+
 
 const App = () => {
   const [products, setProducts] = useState([]);
@@ -172,6 +175,8 @@ const App = () => {
         <Route path="/bill-history" element={<BillHistory />} />
         <Route path="/show-bill" element={<ShowCurrentBill bill={bill} />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/return" element={<Return />} />
+        <Route path="/cancel" element={<Cancel />} />
       </Routes>
     </div>
     //</Router>

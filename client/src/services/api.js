@@ -40,4 +40,11 @@ export const fetchGithubAuth = () => {
   window.location.href = `${apiUrl}/auth/github`;
 };
 
+// Create an order
+export const createOrderPayPal = (orderData) => API.post('/paypal/create-order', orderData);
+
+// Capture an order
+export const captureOrder = (id) => API.post(`/paypal/capture-order/${id}`);
+
+
 export default API;

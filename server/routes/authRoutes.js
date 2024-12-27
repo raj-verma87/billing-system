@@ -1,11 +1,15 @@
 const express = require('express');
 const passport = require('passport');
 const config = require('../config/config');
+const { log } = require('winston');
 
 const env = process.env.NODE_ENV || 'development';
 const envConfig = config[env];
 
 const router = express.Router();
+
+const url = `${process.env.FRONTEND_URL}?isAuthenticated=true`;
+// console.log('Redirecting to:', url);
 
 // Facebook OAuth
 router.get('/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }));
@@ -14,7 +18,7 @@ router.get('/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/' }),
   (req, res) => {
     // Successful authentication
-    res.redirect(`${envConfig.callback_facebook_url}?isAuthenticated=true`); 
+    res.redirect(url); 
   }
 );
 
@@ -25,7 +29,7 @@ router.get(
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
     // Successful authentication
-    res.redirect(`${envConfig.callback_url}?isAuthenticated=true`);  
+    res.redirect(url);  
   }
 );
 
@@ -35,7 +39,7 @@ router.get(
   '/github/callback',
   passport.authenticate('github', { failureRedirect: '/' }),
   (req, res) => {
-    res.redirect(`${envConfig.callback_github_url}?isAuthenticated=true`); 
+    res.redirect(url); 
   }
 );
 

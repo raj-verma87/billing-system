@@ -1,10 +1,14 @@
-import React from 'react';
+import React,{useState} from 'react';
 import phonepeQRCode from './qrcode.jpeg'; // Adjust the path to your QR code image
 import companyLogo from './company-logo.png'; // Adjust the path to your company logo image
 import './ShowCurrentBill.css'; // Import the CSS file
 import { useNavigate } from 'react-router-dom';
+import logToServer from '../LogService';
+import { createOrder, verifyPayment } from '../../services/razorpayService'; 
+import { createOrderPayPal } from '../../services/api'; 
 
 const ShowCurrentBill = ({ bill }) => {
+  const [paymentStatus, setPaymentStatus] = useState('');
   const navigate = useNavigate();
 
   if (!bill) {
@@ -25,6 +29,83 @@ const ShowCurrentBill = ({ bill }) => {
   const calculateGrandTotal = () => {
     // Grand total = Total Amount + GST + Making Charges + Other Charges - Discount
     return Math.round(totalAmount + gst + makingCharges + otherCharges - discount);
+  };
+
+  const handlePayPal = async () => {
+    try {
+      const orderData = {
+        amount: calculateGrandTotal(),
+        paymentMode: paymentMode,
+        // Add any other necessary data here
+      };
+
+      console.log('Creating order with data:', orderData);
+      logToServer('info', 'Creating order with data:', orderData);
+      const createOrderResponse = await createOrderPayPal(orderData);
+
+      if (createOrderResponse.status !== 201) {
+        throw new Error('Failed to create order');
+      }
+      console.log('createOrderResponse', createOrderResponse.data);
+      logToServer('info', 'createOrderResponse', createOrderResponse.data.approvalUrl);
+      const { approvalUrl } = createOrderResponse.data;
+      window.location.href = approvalUrl;
+
+    } catch (error) {
+      console.error('There was a problem with the payment operation:', error);
+      logToServer('error', 'There was a problem with the payment operation:', error);
+    }
+  };
+
+  const handleRazorPay = async () => {
+    try {
+      logToServer('info', 'Initiating payment with Razorpay');
+      const order = await createOrder(500); // Replace 500 with the actual amount
+      console.log('RAZORPAY_KEY_ID', process.env.REACT_APP_RAZORPAY_KEY_ID);
+      // Assuming you have Razorpay script loaded in your index.html
+      const options = {
+        key: process.env.REACT_APP_RAZORPAY_KEY_ID, // Replace with your Razorpay key
+        amount: order.amount,
+        currency: 'INR',
+        name: 'Raj Verma',
+        description: 'bill payment',
+        order_id: order.id,
+        handler: async function (response) {
+          // Handle payment success
+          console.log("create order response...",response);
+          try {
+            const verificationResponse = await verifyPayment({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
+            console.log('Payment verified successfully', verificationResponse);
+            setPaymentStatus('Payment Successful');
+            // Handle successful verification (e.g., show a success message, update UI, etc.)
+          } catch (verificationError) {
+            console.error('Payment verification failed', verificationError);
+            setPaymentStatus('Payment Verification Failed');
+            // Handle verification failure (e.g., show an error message, retry, etc.)
+          }
+        },
+        prefill: {
+          name: 'Raj Verma',
+          email: 'razorUser@gmail.com',
+          contact: '8586060220'
+        },
+        notes: {
+          address: '264/22 Gandhi Nagar, Gurgaon'
+        },
+        theme: {
+          color: '122001'
+        }
+      };
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.error('Payment initiation failed', error);
+      setPaymentStatus('Payment Initiation Failed');
+    }
   };
 
   const handlePrint = () => {
@@ -106,8 +187,8 @@ const ShowCurrentBill = ({ bill }) => {
       {/* Payment Buttons */}
       <section className="bill-section">
         <h3>Payment Options To Pay Online</h3>
-        <button className="payment-button" style={{ marginRight: '10px' }}>Pay with PayPal</button>
-        <button className="payment-button">Pay with Razorpay</button>
+        <button className="payment-button" style={{ marginRight: '10px' }} onClick={() => { handlePayPal(); }}>Pay with PayPal</button>
+        <button className="payment-button" onClick={() => { handleRazorPay(); }}>Pay with Razorpay</button>
       </section>
       {/* QR Code */}
       <section className="qr-code-section">
@@ -119,6 +200,7 @@ const ShowCurrentBill = ({ bill }) => {
       <footer className="bill-footer">
       <button className="no-print" onClick={handlePrint} style={{ marginRight: '10px' }}>Print</button>
       <button className="no-print" onClick={() => navigate('/')}>Home</button>
+      {paymentStatus && <p>{paymentStatus}</p>}
 
       <p>Thank you for shopping with us!</p>
       <p>Signature: ___________________</p>

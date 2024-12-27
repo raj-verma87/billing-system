@@ -12,8 +12,8 @@ passport.use(
     },
     (accessToken, refreshToken, profile, done) => {
       // Here you would handle user data (e.g., store or retrieve user from the database)
-      console.log('Google Profile:', profile);
-      console.log('Google accessToken:', accessToken);
+      // console.log('Google Profile:', profile);
+      // console.log('Google accessToken:', accessToken);
 
       // Access specific fields
       const userData = {
@@ -39,8 +39,8 @@ passport.use(
       callbackURL: `${process.env.CALLBACK_GITHUB_URL}`,
     },
     (accessToken, refreshToken, profile, done) => {
-      console.log('GitHub Profile:',profile);
-      console.log('GitHub accessToken:',accessToken);
+      // console.log('GitHub Profile:',profile);
+      // console.log('GitHub accessToken:',accessToken);
 
       // Access specific fields
       const userData = {
@@ -66,8 +66,8 @@ passport.use(new FacebookStrategy({
 },
 (accessToken, refreshToken, profile, done) => {
   
-  console.log('Facebook Profile:',profile);
-  console.log('Facebook accessToken:',accessToken);
+  // console.log('Facebook Profile:',profile);
+  // console.log('Facebook accessToken:',accessToken);
 
   // Handle user data here (e.g., store or retrieve user from the database)
   const userData = {

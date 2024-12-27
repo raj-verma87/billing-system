@@ -13,6 +13,9 @@ const authRoutes = require('./routes/authRoutes');
 const passport = require('passport');
 const session = require('express-session');
 require('./config/passportConfig'); // Import passport configuration
+const paypalRoutes = require('./routes/paypal'); // Import paypal routes
+const logger = require('./logger');
+const razorpayRoutes = require('./routes/razorpay');
 
 const app = express();
 
@@ -39,6 +42,14 @@ app.use('/api/Categories', categoryRoute);
 app.use('/api/bills', billRoutes);
 app.use('/api/users', userRoutes); // Use user routes
 app.use('/auth', authRoutes);
+app.use('/api/paypal', paypalRoutes);
+app.use('/api/razorpay', razorpayRoutes);
+
+app.post('/log', (req, res) => {
+  const { level, message } = req.body;
+  logger.log({ level, message });
+  res.sendStatus(200);
+});
 
 // Set up relationships
 Category.hasMany(Product, { foreignKey: 'categoryId' });
