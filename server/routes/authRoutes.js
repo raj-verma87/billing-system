@@ -9,7 +9,7 @@ const envConfig = config[env];
 const router = express.Router();
 
 const url = `${process.env.FRONTEND_URL}?isAuthenticated=true`;
-// console.log('Redirecting to:', url);
+console.log('Redirecting to:', url);
 
 // Facebook OAuth
 router.get('/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }));
