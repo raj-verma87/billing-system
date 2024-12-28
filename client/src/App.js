@@ -82,10 +82,6 @@ const App = () => {
   }, [location.pathname]); // Fetch bill when the route changes
 
   useEffect(() => {
-    console.log("Products updated:", products);
-  }, [products]);
-
-  useEffect(() => {
     // Parse query parameters
     const params = new URLSearchParams(location.search);
     const authStatus = params.get('isAuthenticated');
