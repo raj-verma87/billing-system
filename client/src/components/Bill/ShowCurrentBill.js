@@ -242,13 +242,14 @@ const ShowCurrentBill = ({ bill }) => {
       <footer className="bill-footer">
         <button className="no-print" onClick={handlePrint} style={{ marginRight: '10px' }}>Print</button>
         <button className="no-print" onClick={() => navigate('/')}>Home</button>
-        {paymentStatus && <p>{paymentStatus}</p>}
+        {paymentStatus && (
+          <p style={{ color: (paymentStatus.includes('Successful') || paymentStatus.includes('successfully')) ? 'green' : 'red' }}>
+            {paymentStatus}
+          </p>
+        )}
 
         <p>Thank you for shopping with us!</p>
         <p>Signature: ___________________</p>
-
-
-
       </footer>
     </div>
   );
