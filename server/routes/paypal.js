@@ -20,7 +20,7 @@ router.get('/return', (req, res) => {
   
   router.get('/cancel', (req, res) => {
     const apiUrl = process.env.FRONTEND_URL;
-    res.redirect(`${apiUrl}/cancel`);
+    res.redirect(`${apiUrl}/show-bill?isCancelled=true`);
   });
 
 module.exports = router;

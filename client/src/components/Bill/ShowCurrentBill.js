@@ -1,15 +1,44 @@
-import React,{useState} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import phonepeQRCode from './qrcode.jpeg'; // Adjust the path to your QR code image
 import companyLogo from './company-logo.png'; // Adjust the path to your company logo image
 import './ShowCurrentBill.css'; // Import the CSS file
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import logToServer from '../LogService';
-import { createOrder, verifyPayment } from '../../services/razorpayService'; 
-import { createOrderPayPal } from '../../services/api'; 
+import { createOrder, verifyPayment } from '../../services/razorpayService';
+import { createOrderPayPal, captureOrder } from '../../services/api';
 
 const ShowCurrentBill = ({ bill }) => {
   const [paymentStatus, setPaymentStatus] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+  const hasCapturedOrder = useRef(false);
+
+  const captureOrders = async (orderId) => {
+    try {
+      const response = await captureOrder(orderId);
+      console.log('Order captured successfully:', response);
+      setPaymentStatus('Payment Successful');
+    } catch (error) {
+      setPaymentStatus('Payment Initiation Failed');
+      console.error('There was a problem capturing the order:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (!hasCapturedOrder.current) {
+      const params = new URLSearchParams(location.search);
+      const orderId = params.get('id');
+      if (orderId) {
+        captureOrders(orderId);
+        hasCapturedOrder.current = true;
+      } else {
+        const isCancelled = params.get('isCancelled');
+        if (isCancelled) {
+          setPaymentStatus('Payment Cancelled');
+        }
+      }
+    }
+  }, [location]);
 
   if (!bill) {
     return <div style={{ margin: '20px' }}>No bills found</div>; // Show a loading message if the bill is undefined
@@ -60,7 +89,12 @@ const ShowCurrentBill = ({ bill }) => {
   const handleRazorPay = async () => {
     try {
       logToServer('info', 'Initiating payment with Razorpay');
-      const order = await createOrder(500); // Replace 500 with the actual amount
+      const orderData = {
+        amount: calculateGrandTotal(),
+        paymentMode: paymentMode,
+        // Add any other necessary data here
+      };
+      const order = await createOrder(orderData.amount); // Replace 500 with the actual amount
       console.log('RAZORPAY_KEY_ID', process.env.REACT_APP_RAZORPAY_KEY_ID);
       // Assuming you have Razorpay script loaded in your index.html
       const options = {
@@ -72,7 +106,7 @@ const ShowCurrentBill = ({ bill }) => {
         order_id: order.id,
         handler: async function (response) {
           // Handle payment success
-          console.log("create order response...",response);
+          console.log("create order response...", response);
           try {
             const verificationResponse = await verifyPayment({
               razorpay_order_id: response.razorpay_order_id,
@@ -87,6 +121,14 @@ const ShowCurrentBill = ({ bill }) => {
             setPaymentStatus('Payment Verification Failed');
             // Handle verification failure (e.g., show an error message, retry, etc.)
           }
+        },
+        modal: {
+          ondismiss: async () => {
+            // Triggered when the user closes the Razorpay modal
+            console.log("Payment cancelled by user.");
+            setPaymentStatus('Payment Cancelled');
+            //await handlePaymentCancelled(order.id); // Notify backend about cancellation
+          },
         },
         prefill: {
           name: 'Raj Verma',
@@ -198,15 +240,15 @@ const ShowCurrentBill = ({ bill }) => {
 
       {/* Footer Section */}
       <footer className="bill-footer">
-      <button className="no-print" onClick={handlePrint} style={{ marginRight: '10px' }}>Print</button>
-      <button className="no-print" onClick={() => navigate('/')}>Home</button>
-      {paymentStatus && <p>{paymentStatus}</p>}
+        <button className="no-print" onClick={handlePrint} style={{ marginRight: '10px' }}>Print</button>
+        <button className="no-print" onClick={() => navigate('/')}>Home</button>
+        {paymentStatus && <p>{paymentStatus}</p>}
 
-      <p>Thank you for shopping with us!</p>
-      <p>Signature: ___________________</p>
-       
-          
-       
+        <p>Thank you for shopping with us!</p>
+        <p>Signature: ___________________</p>
+
+
+
       </footer>
     </div>
   );
