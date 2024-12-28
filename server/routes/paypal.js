@@ -15,7 +15,7 @@ router.get('/return', (req, res) => {
     console.log('token...', apiUrl);
     logger.log({ level: 'info', message: `Payment successful for order ${token}` });
     console.log(`Redirecting to frontend /return with token: ${token}`);
-    res.redirect(`${apiUrl}/return?id=${token}`);
+    res.redirect(`${apiUrl}?id=${token}`);
   });
   
   router.get('/cancel', (req, res) => {
